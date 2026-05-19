@@ -24,15 +24,16 @@ jobs:
       - name: Checkout secrets repo
         uses: actions/checkout@v4
         with:
-          repository: auliaramadhan2/flutter_learn_githubaction
+          repository: auliaramadhan2/flutter_secrets_learn
           ref: refs/heads/main
           token: ${{ env.SECRETS_TOKEN }}
           path: secrets
 
       - name: Copy build keys to project
         run: |
-          cp project/env/key.properties project/android/
-          cp project/env/flutter_learn_ga.jks project/android/app/
+          cp secrets/env/key.properties project/android/
+          cp secrets/env/flutter_learn_ga.jks project/android/app/
+          cp secrets/docker/Dockerfile project/
 
       - name: Increment build number
         run: |
