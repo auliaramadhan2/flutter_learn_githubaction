@@ -62,10 +62,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    # environment: production
+    environment: production
     env:
       FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-      SECRETS_TOKEN: ${{ secrets.SECRETS_TOKEN }}
+      SECRETS_TOKEN: ${{ secrets.SECRET_TOKEN }}
     steps:
       - name: Checkout to main project repo
         uses: actions/checkout@v4
