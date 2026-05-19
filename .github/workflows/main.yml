@@ -31,8 +31,8 @@ jobs:
 
       - name: Copy build keys to project
         run: |
-          cp env/key.properties project/android/
-          cp env/flutter_learn_ga.jks project/android/app/
+          cp project/env/key.properties project/android/
+          cp project/env/flutter_learn_ga.jks project/android/app/
 
       - name: Increment build number
         run: |
@@ -47,4 +47,14 @@ jobs:
           cd project
           docker build -t flutter-apk .
 
-  deploy:
+      - name: Extract Android APK File
+        run: |
+          cd project
+          docker cp $(docker create --rm flutter-apk):/output/app-release.apk ./app-release.apk
+
+      - name: Upload build to Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: project/app-release.apk
+
