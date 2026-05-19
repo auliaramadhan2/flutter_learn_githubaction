@@ -59,3 +59,45 @@ jobs:
           name: app-release
           path: project/app-release.apk
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    # environment: production
+    env:
+      FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      SECRETS_TOKEN: ${{ secrets.SECRETS_TOKEN }}
+    steps:
+      - name: Checkout to main project repo
+        uses: actions/checkout@v4
+        with:
+          path: project
+      - name: Checkout secrets repo
+        uses: actions/checkout@v4
+        with:
+          repository: auliaramadhan2/flutter_secrets_learn
+          ref: refs/heads/main
+          token: ${{ env.SECRETS_TOKEN }}
+          path: secrets
+
+      - name: Download built APK
+        uses: actions/download-artifact@v4
+        with:
+          name: app-release
+          path: project
+
+      - name: Copy firebase service account
+        run: |
+          cp secrets/sa/firebase-distribution.json project
+          cp secrets/fastlane/Gemfile project/fastlane
+          cp secrets/fastlane/Fastfile project/fastlane
+
+      - name: Setup Ruby and Fastlane
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 'ruby'
+          bundler-cache: true
+          working-directory: project/fastlane
+
+      
+ 
+
