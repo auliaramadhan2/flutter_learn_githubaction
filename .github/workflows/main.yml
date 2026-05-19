@@ -88,6 +88,7 @@ jobs:
       - name: Copy firebase service account
         run: |
           cp secrets/sa/firebase-distribution.json project
+          mkdir project/fastlane
           cp secrets/fastlane/Gemfile project/fastlane
           cp secrets/fastlane/Fastfile project/fastlane
 
