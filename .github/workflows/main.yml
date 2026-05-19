@@ -1,0 +1,32 @@
+name: Build Distribute
+
+on:
+  push:
+   branches: [ "main" ]
+
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      BUILD_NUMBER: ${{ github.run_number }}
+      SECRETS_TOKEN: ${{ secrets.SECRET_TOKEN }}
+
+    steps:
+      - name: Checkout to main project repo
+        uses: actions/checkout@v4
+        with:
+          path: project
+
+      - name: Checkout secrets repo
+        uses: actions/checkout@v4
+        with:
+          repository: auliaramadhan2/flutter_learn_githubaction
+          ref: refs/heads/main
+          token: ${{ env.SECRETS_TOKEN }}
+          path: secrets
+
+  deploy:
