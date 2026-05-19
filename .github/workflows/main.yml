@@ -29,4 +29,22 @@ jobs:
           token: ${{ env.SECRETS_TOKEN }}
           path: secrets
 
+      - name: Copy build keys to project
+        run: |
+          cp env/key.properties project/android/
+          cp env/flutter_learn_ga.jks project/android/app/
+
+      - name: Increment build number
+        run: |
+          cd project
+          current_version_number=$(awk '/version:/ {print $2}' pubspec.yaml | cut -d'+' -f1)
+          new_version="$current_version_number+$BUILD_NUMBER"
+          echo "version: $new_version"
+          sed -i "s/version: .*/version: $new_version/" pubspec.yaml
+
+      - name: Build Docker Image
+        run: |
+          cd project
+          docker build -t flutter-apk .
+
   deploy:
